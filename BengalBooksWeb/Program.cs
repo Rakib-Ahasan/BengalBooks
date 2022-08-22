@@ -13,6 +13,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 //fdfds bd gfdg dh
+//Rakib Ahasan
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
