@@ -1,5 +1,5 @@
 ﻿using BengalBooksWeb.Data;
-using BengalBooksWeb.Models;
+using BengalBooks.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BengalBooksWeb.Controllers

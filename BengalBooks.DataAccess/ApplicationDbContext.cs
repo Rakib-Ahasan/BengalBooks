@@ -1,4 +1,4 @@
-﻿using BengalBooksWeb.Models;
+﻿using BengalBooks.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BengalBooksWeb.Data
