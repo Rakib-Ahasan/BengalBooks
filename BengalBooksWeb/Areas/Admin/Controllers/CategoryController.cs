@@ -1,26 +1,27 @@
-﻿using BengalBooksWeb.Data;
+﻿using BengalBooks.DataAccess.Repository.IRepository;
+using BengalBooksWeb.Data;
 using BengalBooks.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BengalBooksWeb.Controllers
+namespace BengalBooksWeb.Areas.Admin.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            IEnumerable<Category> data = _db.Categories;
+            IEnumerable<Category> data = _unitOfWork.Category.GetAll();
             return View(data);
         }
 
         //GET
         public IActionResult Create()
         {
-           
+
             return View();
         }
 
@@ -31,12 +32,12 @@ namespace BengalBooksWeb.Controllers
         {
             if (obj.Name == obj.DisplayOrder.ToString())
             {
-                ModelState.AddModelError("Name","The DisplayOrder cannot exactly match the name.");
+                ModelState.AddModelError("Name", "The DisplayOrder cannot exactly match the name.");
             }
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(obj);
-                _db.SaveChanges();
+                _unitOfWork.Category.Add(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "Category Created Successfully.";
                 return RedirectToAction("Index");
             }
@@ -44,23 +45,23 @@ namespace BengalBooksWeb.Controllers
         }
 
         //GET
-        public IActionResult Edit(int?id)
+        public IActionResult Edit(int? id)
         {
             if (id == null || id == 0)
             {
                 return NotFound();
             }
 
-            var dataFromDb = _db.Categories.Find(id);
-            //var dataFromDbFirstOrDefault = _db.Categories.FirstOrDefault(m => m.Id == id);
+            //var dataFromDb = _db..Find(id);
+            var dataFromDbFirstOrDefault = _unitOfWork.Category.GetFirstOrDefault(m => m.Id == id);
             //var dataFromDbSingleOrDefault = _db.Categories.SingleOrDefault(m => m.Id == id);
 
-            if (dataFromDb == null)
+            if (dataFromDbFirstOrDefault == null)
             {
                 return NotFound();
             }
 
-            return View(dataFromDb);
+            return View(dataFromDbFirstOrDefault);
         }
 
         //POST
@@ -74,8 +75,8 @@ namespace BengalBooksWeb.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(obj);
-                _db.SaveChanges();
+                _unitOfWork.Category.Update(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "Category Updated Successfully.";
                 return RedirectToAction("Index");
             }
@@ -90,7 +91,7 @@ namespace BengalBooksWeb.Controllers
                 return NotFound();
             }
 
-            var dataFromDb = _db.Categories.Find(id);
+            var dataFromDb = _unitOfWork.Category.GetFirstOrDefault(m => m.Id == id);
 
             if (dataFromDb == null)
             {
@@ -101,16 +102,16 @@ namespace BengalBooksWeb.Controllers
         }
 
         //POST
-        [HttpPost,ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         [AutoValidateAntiforgeryToken]
         public IActionResult DeletePOST(int id)
         {
-            var obj = _db.Categories.Find(id);
+            var obj = _unitOfWork.Category.GetFirstOrDefault(m => m.Id == id);
             if (obj == null)
                 return NotFound();
-            _db.Categories.Remove(obj);
+            _unitOfWork.Category.Remove(obj);
             TempData["success"] = "Category Deleted Successfully.";
-            _db.SaveChanges();
+            _unitOfWork.Save();
             return RedirectToAction("Index");
         }
     }
