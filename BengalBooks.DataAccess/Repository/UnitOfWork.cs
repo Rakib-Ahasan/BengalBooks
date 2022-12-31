@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BengalBooks.DataAccess.Repository.IRepository;
+using BengalBooks.Models;
 using BengalBooksWeb.Data;
 
 namespace BengalBooks.DataAccess.Repository
@@ -16,9 +17,11 @@ namespace BengalBooks.DataAccess.Repository
             _dbContext = dbContext;
             Category = new CategoryRepository(_dbContext);
             CoverType = new CoverTypeRepository(_dbContext);
+            Product = new ProductRepository(_dbContext);
         }
         public ICategoryRepository Category { get; private set; }
         public ICoverTypeRepository CoverType { get; private set; }
+        public IProductRepository Product { get; private set; }
         public void Save()
         {
            _dbContext .SaveChanges();
