@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BengalBooks.Models;
 
 namespace BengalBooks.DataAccess.Repository.IRepository
 {
-    public interface IUnitOfWork
+    public interface IProductRepository : IRepository<Product>
     {
-        ICategoryRepository Category { get; }
-        ICoverTypeRepository CoverType { get; }
-        IProductRepository Product { get; }
-        void Save();
+        void Update(Product obj);
+        
     }
 }
